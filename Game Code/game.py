@@ -18,8 +18,11 @@ def keyloop(scr,scr2):
 	screen = Screen(scr,pc.mainPlayer, initWorld)
 	menu = MenuHandler(scr2,pc.mainPlayer)
 	curses.start_color()
+	serverAddr = ("127.0.0.1",5000)
+	client = Client.Client("127.0.0.1",1234,pc.mainPlayer,screen,menu)
 	scr.nodelay(True)
 	screen.draw()
+	client.login(serverAddr)
 
 	while 1:
 		menu.Update()
@@ -31,6 +34,7 @@ def keyloop(scr,scr2):
 			if c == 'w':
 				pc.mainPlayer.movePos(0,-1)
 				screen.draw()
+				client.Send("I pressed 'W'")
 			elif c == 'a':
 				pc.mainPlayer.movePos(-1,0)
 				screen.draw()
@@ -100,6 +104,7 @@ def keyloop(scr,scr2):
 			elif c == "p":
 				pc.mainPlayer.world.saveArray(screen.world.name)
 		scr.refresh()
+	c.close()
 
 
 

@@ -16,13 +16,15 @@ def fromFile(file):
     worldFile.close()
     return array
 
-def sendToAll(addr, data):
+def sendToAll(addr, data, sock):
     for client in clients:
         if addr != client:
-            s.sendto(data, client)
+            sock.sendto(data, client)
 
-def Login(addr, data):
+def Login(addr,sock):
     clients.append(addr)
+    sock.sendto(addr, json.dumps(clients))
+
 
 def Logout(addr):
     del clients[clients.index(addr)]
@@ -33,19 +35,20 @@ clients = []
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.bind((host,port))
-s.setblocking(0)
+s.setblocking(True)
 
 quitting = False
 print "Server Started."
 while not quitting:
     try:
         data, addr = s.recvfrom(1024)
+        print time.ctime(time.time()) + str(addr) + ": :" + str(data)
         if "Quit" in str(data):
             Logout(addr)
+            quitting = True
         if "Hello!" in str(data):
-            Login(addr,data)
-        print time.ctime(time.time()) + str(addr) + ": :" + str(data)
-        sendToAll(addr,data)
+            Login(addr,s)
+        sendToAll(addr,data,s)
     except:
-        pass
+        raise
 s.close()

@@ -11,37 +11,60 @@ import json
 
 class Client():
 	def __init__(self,ip,port,player,screen,menu):
-		self.shutdown = False
+		self.shutdown = True
+		#self.ip = self.getIP()
 		self.ip = ip
 		self.port = port
 		self.player = player
 		self.screen = screen
+		self.world = None
 		self.menu = menu
 		self.server = None
 		self.mainSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 		self.mainSocket.bind((self.ip, self.port))
-		self.mainSocket.setblocking(0)
+		#self.mainSocket.setblocking(0)
 		self.players = {}
 		self.functions = [Player.setChar,Player.setPos,Player.movePos,Player.setTile,Player.Interact]
 
+	def getIP(self):
+		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+		s.connect(("gmail.com",80))
+		ip = (s.getsockname()[0])
+		s.close()
+		return ip
+
+	def addPlayer(self,player):
+		self.players[str(player)] = Player.Player(0,0,["@"],self.world)
+
 	def login(self,server):
 		self.server = server
-		self.Send("{'function':1,'args':(1,2)")
+		self.Send("Hello!")
+		'''clients, serverA = self.mainSocket.recvfrom(1024)
+		clients = json.dumps(clients)
+		for client in clients:
+			self.addPlayer(client)
+		self.world = gw.spawnIsland'''
+
+	def Logout(self):
+		self.Send("Quit")
+		self.shutdown = True
 
 	def receving(self, name, sock):
-		while not self.shutdown:
-			try:
-				while True:
-					data, addr = sock.recvfrom(1024)
-					print(data)
-					message = json.loads(data)
-					self.handleInput(massage["data"],message["addr"])
-			except:
-				pass
+		while True:
+			while not self.shutdown:
+				try:
+					while True:
+						data, addr = sock.recvfrom(1024).decode()
+						print(data)
+						message = json.loads(data)
+						self.handleInput(massage["data"],message["addr"])
+				except:
+					pass
+			pass
 
 	def handleInput(self,data,addr):
-		if addr not in self.clients:
-			self.clients[addr] = pc.Player(int(80),int(25),["@"],self.screen.world)
+		if data == "Hello!":
+			self.addPlayer(addr)
 		funcData = json.loads(data)
 		self.functions[funcData["functions"]](self.clients[addr],*funcData["args"])
 		self.screen.draw()
@@ -57,3 +80,49 @@ class Client():
 	def Close(self):
 		self.shudown = True
 		self.mainSocket.close()
+
+'''import socket
+import threading
+import time
+
+tLock = threading.Lock()
+shutdown = False
+
+def receving(name, sock):
+    while not shutdown:
+        try:
+            tLock.acquire()
+            while True:
+                data, addr = sock.recvfrom(1024)
+                print str(data)
+        except:
+            pass
+        finally:
+            tLock.release()
+
+host = '127.0.0.1'
+port = 0
+
+server = ('127.0.0.1',5000)
+
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.bind((host, port))
+s.setblocking(0)
+
+rT = threading.Thread(target=receving, args=("RecvThread",s))
+rT.start()
+
+alias = raw_input("Name: ")
+message = raw_input(alias + "-> ")
+while message != 'q':
+    if message != '':
+        s.sendto(alias + ": " + message, server)
+    tLock.acquire()
+    message = raw_input(alias + "-> ")
+    tLock.release()
+    time.sleep(0.2)
+
+shudown = True
+rT.join()
+s.close()
+'''

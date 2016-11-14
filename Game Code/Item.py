@@ -15,6 +15,12 @@ class Item():
     	newFile.close()
         return data
 
+    def getCol(self):
+        return self.data["COLOR"]
+
+    def getChar(self):
+        return self.data["CHARACTER"]
+
     def onUse(self):
         if self.data["USABLE"]:
             for i,v in enumerate(self.data["EFFECTS"].keys()):

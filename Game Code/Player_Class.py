@@ -22,9 +22,14 @@ class Player():
 		self.selectedTile = 0
 		self.modeNames = ['INTERACT','PLAY','BUILD']
 		self.world.addPlayer(self)
+		self.inventory.addItem("Small Health Potion",8)
 
 	def pickUpItem(self,itemName,amount):
 		self.Inventory.addItem(itemName,amount)
+
+	def selectItem(itemToSelect):
+		return True
+
 
 	def setChar(self, charindex):
 		self.charnum = charindex

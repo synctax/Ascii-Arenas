@@ -31,6 +31,8 @@ def keyloop(scr,scr2):
 		except:
 			c = 'q;'
 		if pc.mainPlayer.mode == 1:
+			if c in "0123456789":
+				pc.mainPlayer.selectItem(int(c))
 			if c == 'w':
 				pc.mainPlayer.movePos(0,-1)
 				screen.draw()

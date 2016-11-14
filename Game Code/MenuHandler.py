@@ -1,4 +1,5 @@
 import curses
+import Item
 
 class MenuHandler():
 	def __init__(self, scr, player):
@@ -26,9 +27,15 @@ class MenuHandler():
 			self.scr.addstr(8,0,"---------------------")
 			self.scr.addstr(9,0,"     Inventory")
 			self.scr.addstr(10,0,"---------------------")
-			for i,v in enumerate(self.player.inventory.items.keys()):
-				self.scr.addstr(12+i,0,str(i) + "-" +v)
-				lastI = i
+			for i,v in enumerate(self.player.inventory.occupiedItems.keys()):
+				if v != "NON_STACKABLE":
+					count = self.player.inventory.occupiedItems[v]
+					self.scr.addstr(10+i,int((21-5)/2),str(i)+"("+str(count) +")")
+					col = Item.allItems[v].getCol()
+					char = Item.allItems[v].getChar()
+					curses.init_pair(col,col,0)
+					self.scr.addstr(11+i,0,char,curses.color_pair(col))
+					self.scr.addstr(11+i,int((21-len(v))/2)+1,v)
 		elif self.player.mode == 2:
 			self.scr.addstr(5,1,"Move Cursor-W,A,S,D")
 			self.scr.addstr(6,1,"Build - SPACE")

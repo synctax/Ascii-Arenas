@@ -6,6 +6,7 @@ import tiles
 import Player_Class as pc
 from Screen import Screen
 from MenuHandler import MenuHandler
+import Server
 import Client
 import threading
 
@@ -20,6 +21,11 @@ def keyloop(scr,scr2):
 	curses.start_color()
 	scr.nodelay(True)
 	screen.draw()
+	serverAddr = ("10.7.38.170",1337)
+	client = Client.Client("10.7.38.170",12345,pc.mainPlayer,screen,MenuHandler)
+	#server.Start()
+	client.login(serverAddr)
+	client.startListening()
 
 	while 1:
 		menu.Update()
@@ -29,6 +35,7 @@ def keyloop(scr,scr2):
 			c = 'q;'
 		if pc.mainPlayer.mode == 1:
 			if c == 'w':
+				client.Send("I pressed 'W'")
 				pc.mainPlayer.movePos(0,-1)
 				screen.draw()
 			elif c == 'a':
@@ -100,7 +107,7 @@ def keyloop(scr,scr2):
 			elif c == "p":
 				pc.mainPlayer.world.saveArray(screen.world.name)
 		scr.refresh()
-
+	client.Close()
 
 
 def main(stdscr):

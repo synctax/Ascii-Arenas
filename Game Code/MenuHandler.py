@@ -23,6 +23,12 @@ class MenuHandler():
 			self.scr.addstr(5,1,"Move - W,A,S,D")
 			self.scr.addstr(6,1,"Interact - E")
 			self.scr.addstr(7,1,"Build - M")
+			self.scr.addstr(8,0,"---------------------")
+			self.scr.addstr(9,0,"     Inventory")
+			self.scr.addstr(10,0,"---------------------")
+			for i,v in enumerate(self.player.inventory.items.keys()):
+				self.scr.addstr(12+i,0,str(i) + "-" +v)
+				lastI = i
 		elif self.player.mode == 2:
 			self.scr.addstr(5,1,"Move Cursor-W,A,S,D")
 			self.scr.addstr(6,1,"Build - SPACE")

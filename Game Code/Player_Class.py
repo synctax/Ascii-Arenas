@@ -1,18 +1,20 @@
 import GameWorld as gw
 import random
 import AI
+import Item
+from Inventory import Inventory
 
 #CHARACTER CLASS
-class Player:
+class Player():
 	def __init__(self, initx, inity, initchars,world):
 		self.stats = {"HEALTH":100}
+		self.inventory = Inventory(10)
 		self.x = initx
 		self.y = inity
 		self.chars = initchars
 		self.charnum = 0
 		self.char = initchars[0]
 		self.world = world
-		self.inventory = []
 		self.cursorx = 0
 		self.cursory = 0
 		self.cursorShowing = False
@@ -20,6 +22,9 @@ class Player:
 		self.selectedTile = 0
 		self.modeNames = ['INTERACT','PLAY','BUILD']
 		self.world.addPlayer(self)
+
+	def pickUpItem(self,itemName,amount):
+		self.Inventory.addItem(itemName,amount)
 
 	def setChar(self, charindex):
 		self.charnum = charindex

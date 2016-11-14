@@ -1,14 +1,16 @@
 import timerHandler as TH
 import Player_Class as pc
+import json
 
 class Item():
     def __init__(self,filename,effects):
-        self.file = "../Items/"+filename
+        self.file = "../Items/"+filename+".json"
         self.data = self.fromFile(self.file)
         self.effects = effects
+        self.name = self.data["NAME"]
 
     def fromFile(self,filename):
-    	newFile = open(file,'r')
+    	newFile = open(filename,'r')
     	data = json.load(newFile)
     	newFile.close()
         return data
@@ -43,3 +45,6 @@ def heal(health,duration,frequency,target):
 
 healingEffect = itemEffect(["HEALTH","DURATION","FREQUENCY"],heal)
 allEffects = {"PLAYER_HEAL":healingEffect}
+
+smallHealing = Item("smallHealthPotion",allEffects)
+allItems = {"Small Health Potion":smallHealing}

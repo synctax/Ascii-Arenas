@@ -1,0 +1,26 @@
+{
+
+  "NAME":"Small Health Potion",
+  "CHARACTER":"&",
+  "COLOR": 124,
+  "USABLE": true,
+  "USES": 1,
+  "STACKABLE":true,
+  "ON_USE": {
+    "EFFECTS":{
+
+      "PLAYER_HEAL":{
+        "HEALTH":10,
+        "DURATION":7,
+        "FREQUENCY":1,
+        "TARGET": "USER"
+      },
+
+      "PLAYER_INVINCIBILITY":{
+        "DURATION":1,
+        "TARGET":"USER"
+      }
+
+    }
+  }
+}

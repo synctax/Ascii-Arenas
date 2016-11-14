@@ -5,6 +5,7 @@ import AI
 #CHARACTER CLASS
 class Player:
 	def __init__(self, initx, inity, initchars,world):
+		self.stats = {"HEALTH":100}
 		self.x = initx
 		self.y = inity
 		self.chars = initchars
@@ -103,4 +104,3 @@ spawnCrabs = []
 #make spawn crabs
 '''for i in range(0,random.randint(3,10)):
 	spawnCrabs.append(Mob(random.randint(25,129),random.randint(9,43),crabChars,160,gw.spawnIsland,AI.mobAi))'''
-

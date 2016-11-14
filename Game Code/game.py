@@ -8,6 +8,8 @@ from Screen import Screen
 from MenuHandler import MenuHandler
 import Client
 import threading
+import Item
+import timerHandler as TH
 
 gw.spawnIsland.tiles,gw.mainShop.tiles = tiles.allTiles, tiles.allTiles
 gw.spawnIsland.doors,gw.mainShop.doors = tiles.spawnIslandDoors, tiles.mainShopDoors
@@ -23,6 +25,7 @@ def keyloop(scr,scr2):
 
 	while 1:
 		menu.Update()
+		TH.Kronos.Update()
 		try:
 			c = chr(scr.getch())
 		except:

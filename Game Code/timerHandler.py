@@ -5,7 +5,7 @@ class timerHandler():
     def Update(self):
         for i in self.timers:
             if i.life == 0:
-                i.deathFunc()
+                i.deathFunc(*i.args)
                 self.removeTimer(i)
                 continue
             i.life -= 1
@@ -16,13 +16,11 @@ class timerHandler():
     def removeTimer(self,timer):
         del self.timers[self.timers.index(timer)]
 
-class timer():
-    def __init__(self,life,deathFunc,handler):
+class Timer():
+    def __init__(self,life,deathFunc,args,handler):
         self.life = life
         self.deathFunc = deathFunc
+        self.args = args
         handler.addTimer(self)
 
 Kronos = timerHandler()
-def testfunc():
-    print "hello"
-test = timer(6000,testfunc,Kronos)

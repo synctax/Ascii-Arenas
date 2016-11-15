@@ -36,13 +36,13 @@ class MenuHandler():
 			self.scr.addstr(11+lastI,0,"-------------------")
 			self.scr.addstr(13+lastI,0,"-------Doors-------")
 			for j,k in enumerate(self.player.world.doors):
-				self.scr.addstr(14+lastI+j,1,["F","G","H","J","K","L"][j] + " - " +k.getName())
+				self.scr.addstr(14+lastI+j,1,["F","G","H","J","K","L"][j] + ") " +k.getName())
 				lastJ = j
 			self.scr.addstr(15+lastI+lastJ,0,"-------------------")
 		elif self.player.mode == 3:
 			self.scr.addstr(1,0,"-------Servers-------")
 			for i,v in enumerate(self.player.serverList.keys()):
-				self.scr.addstr(2+i,0,str(i) + " - " +str(self.player.serverList[v]))
+				self.scr.addstr(2+i,0,str(i) + ") " + v) #str(self.player.serverList[v]))
 				lastI = i
 			self.scr.addstr(4+lastI,0,"-------------------")
 		self.scr.addstr(44,1,"      Q - Quit")

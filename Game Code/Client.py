@@ -25,6 +25,7 @@ class Client():
 		self.players = {}
 		self.functions = [Player.setChar,Player.setPos,Player.movePos,Player.setTile,Player.Interact]
 		self.player = player
+		self.playerChars = ["#","$","%"]
 
 	def getIP(self):
 		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -34,7 +35,7 @@ class Client():
 		return ip
 
 	def addPlayer(self,player):
-		self.players[str(player)] = Player(50,20,["@"],self.world)
+		self.players[str(player)] = Player(50,20,[self.playerChars[len(self.players)-1]],self.world)
 
 	def removePlayer(self,player):
 		self.players[str(player)].world.removePlayer(self.players[str(player)])

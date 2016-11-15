@@ -37,6 +37,10 @@ class Client():
 	def addPlayer(self,player):
 		self.players[str(player)] = Player(50,20,["@"],self.world)
 
+	def removePlayer(self,player):
+		self.players[str(player)].world.removePlayer(self.players[str(player)])
+		del self.players[str(player)]
+
 	def movePlayer(self,player,data):
 		data = data.split(" ")
 		self.players[str(player)].setPos(int(data[0]),int(data[1]))
@@ -66,6 +70,10 @@ class Client():
 		data = decodedData["data"]
 		addr = tuple(decodedData["addr"]) #decode list into a tuple
 		if self.players.has_key(str(addr)):
+			if data == "Quit":
+				self.removePlayer(addr)
+				self.UPDATE_FLAG = True
+				return True
 			self.movePlayer(addr,data)
 		else:
 			self.Send(str(self.player.x)+" "+str(self.player.y))

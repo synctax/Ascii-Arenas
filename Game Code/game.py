@@ -50,6 +50,7 @@ def keyloop(scr,scr2):
 					client.Send("1 0")
 				elif c == "q":
 					client.Send("Quit")
+					client.Close()
 					break
 				elif c == "e":
 					if not pc.mainPlayer.Interact():

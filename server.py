@@ -48,7 +48,6 @@ while not quitting:
         print time.ctime(time.time()) + str(addr) + ": :" + str(data)
         if "Quit" in str(data):
             Logout(addr)
-            quitting = True
         if "Hello!" in str(data):
             Login(addr,s)
         sendToAll(addr,data,s)

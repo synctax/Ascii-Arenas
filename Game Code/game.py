@@ -24,7 +24,9 @@ def keyloop(scr,scr2):
 
 	while 1:
 		menu.Update()
-		screen.draw()
+		if client.UPDATE_FLAG:
+			screen.draw()
+			client.UPDATE_FLAG = False
 		try:
 			c = chr(scr.getch())
 		except:

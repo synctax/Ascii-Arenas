@@ -9,9 +9,11 @@ import json
 #server = ('127.0.0.1',5000)
 #data format: {"function" : <index of function>, "args": (args tuple)}
 
+
 class Client():
 	def __init__(self,player,screen,menu):
 		self.shutdown = True
+		self.UPDATE_FLAG = False
 		self.ip = self.getIP()
 		self.port = 0
 		self.player = player
@@ -67,6 +69,7 @@ class Client():
 			self.movePlayer(addr,data)
 		else:
 			self.addPlayer(addr)
+		self.UPDATE_FLAG = True
 
 	def Send(self,message):
 		self.mainSocket.sendto(message, self.server)

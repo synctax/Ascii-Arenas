@@ -31,82 +31,83 @@ def keyloop(scr,scr2):
 			c = chr(scr.getch())
 		except:
 			c = 'q;'
-		if pc.mainPlayer.mode == 1:
-			if c == 'w':
-				pc.mainPlayer.movePos(0,-1)
-				screen.draw()
-				client.Send("0 -1")
-			elif c == 'a':
-				pc.mainPlayer.movePos(-1,0)
-				screen.draw()
-				client.Send("-1 0")
-			elif c == 's':
-				pc.mainPlayer.movePos(0,1)
-				screen.draw()
-				client.Send("0 1")
-			elif c == 'd':
-				pc.mainPlayer.movePos(1,0)
-				screen.draw()
-				client.Send("1 0")
-			elif c == "q":
-				client.Send("Quit")
-				break
-			elif c == "e":
-				if not pc.mainPlayer.Interact():
+		if c != 'q;':
+			if pc.mainPlayer.mode == 1:
+				if c == 'w':
+					pc.mainPlayer.movePos(0,-1)
+					screen.draw()
+				elif c == 'a':
+					pc.mainPlayer.movePos(-1,0)
+					screen.draw()
+					client.Send("-1 0")
+				elif c == 's':
+					pc.mainPlayer.movePos(0,1)
+					screen.draw()
+					client.Send("0 1")
+				elif c == 'd':
+					pc.mainPlayer.movePos(1,0)
+					screen.draw()
+					client.Send("1 0")
+				elif c == "q":
+					client.Send("Quit")
+					break
+				elif c == "e":
+					if not pc.mainPlayer.Interact():
+						pc.mainPlayer.cursorShowing = True
+						pc.mainPlayer.mode = 0
+					screen.draw()
+				elif c == "m":
 					pc.mainPlayer.cursorShowing = True
-					pc.mainPlayer.mode = 0
-				screen.draw()
-			elif c == "m":
-				pc.mainPlayer.cursorShowing = True
-				pc.mainPlayer.mode = 2
-		elif pc.mainPlayer.mode == 0:
-			if c == 'w':
-				pc.mainPlayer.moveCursor(0,-1,True)
-				screen.draw()
-			elif c == 'a':
-				pc.mainPlayer.moveCursor(-1,0,True)
-				screen.draw()
-			elif c == 's':
-				pc.mainPlayer.moveCursor(0,1,True)
-				screen.draw()
-			elif c == 'd':
-				pc.mainPlayer.moveCursor(1,0,True)
-				screen.draw()
-			elif c == "q":
-				break
-			elif c == "e":
-				pc.mainPlayer.cursorShowing = False
-				pc.mainPlayer.Interact()
-				screen.draw()
-		elif pc.mainPlayer.mode == 2:
-			if c in '1234567890':
-				pc.mainPlayer.setSelectedTile(int(c))
-				screen.draw()
-			elif c in 'fghjkl':
-				pc.mainPlayer.setSelectedTile(str(['f','g','h','j','k','l'].index(c)))
-			elif c == 'w':
-				pc.mainPlayer.moveCursor(0,-1,False)
-				screen.draw()
-			elif c == 'a':
-				pc.mainPlayer.moveCursor(-1,0,False)
-				screen.draw()
-			elif c == 's':
-				pc.mainPlayer.moveCursor(0,1,False)
-				screen.draw()
-			elif c == 'd':
-				pc.mainPlayer.moveCursor(1,0,False)
-				screen.draw()
-			elif c == ' ':
-				pc.mainPlayer.setTile()
-				screen.draw()
-			elif c == "q":
-				break
-			elif c == "m":
-				pc.mainPlayer.cursorShowing = False
-				pc.mainPlayer.mode = 1
-				screen.draw()
-			elif c == "p":
-				pc.mainPlayer.world.saveArray(screen.world.name)
+					pc.mainPlayer.mode = 2
+				client.Send(str(pc.mainPlayer.x) + " " +str(pc.mainPlayer.y))
+			elif pc.mainPlayer.mode == 0:
+				if c == 'w':
+					pc.mainPlayer.moveCursor(0,-1,True)
+					screen.draw()
+				elif c == 'a':
+					pc.mainPlayer.moveCursor(-1,0,True)
+					screen.draw()
+				elif c == 's':
+					pc.mainPlayer.moveCursor(0,1,True)
+					screen.draw()
+				elif c == 'd':
+					pc.mainPlayer.moveCursor(1,0,True)
+					screen.draw()
+				elif c == "q":
+					break
+				elif c == "e":
+					pc.mainPlayer.cursorShowing = False
+					pc.mainPlayer.Interact()
+					screen.draw()
+			elif pc.mainPlayer.mode == 2:
+				if c in '1234567890':
+					pc.mainPlayer.setSelectedTile(int(c))
+					screen.draw()
+				elif c in 'fghjkl':
+					pc.mainPlayer.setSelectedTile(str(['f','g','h','j','k','l'].index(c)))
+				elif c == 'w':
+					pc.mainPlayer.moveCursor(0,-1,False)
+					screen.draw()
+				elif c == 'a':
+					pc.mainPlayer.moveCursor(-1,0,False)
+					screen.draw()
+				elif c == 's':
+					pc.mainPlayer.moveCursor(0,1,False)
+					screen.draw()
+				elif c == 'd':
+					pc.mainPlayer.moveCursor(1,0,False)
+					screen.draw()
+				elif c == ' ':
+					pc.mainPlayer.setTile()
+					screen.draw()
+				elif c == "q":
+					break
+				elif c == "m":
+					pc.mainPlayer.cursorShowing = False
+					pc.mainPlayer.mode = 1
+					screen.draw()
+				elif c == "p":
+					pc.mainPlayer.world.saveArray(screen.world.name)
 		scr.refresh()
 	client.Close()
 

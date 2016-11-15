@@ -39,14 +39,14 @@ class Client():
 
 	def movePlayer(self,player,data):
 		data = data.split(" ")
-		self.players[str(player)].movePos(int(data[0]),int(data[1]))
+		self.players[str(player)].setPos(int(data[0]),int(data[1]))
 
 	def login(self,server):
 		self.server = server
 		self.Send("Hello!")
 		self.shutdown = False
-		clients, serverA = self.mainSocket.recvfrom(1024)
-		#clients = json.dumps(clients)
+		#clients, serverA = self.mainSocket.recv(1024)
+		#clients = json.loads(clients)
 		#for client in clients:
 			#self.addPlayer(client)
 		self.world = gw.spawnIsland

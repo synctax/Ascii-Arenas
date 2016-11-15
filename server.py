@@ -21,14 +21,12 @@ def fromFile(file):
 
 def sendToAll(addr, data, sock):
     for client in clients:
-        #if addr != client:
-        toSend = {"data": data, "addr": list(addr)}
-        sock.sendto(json.dumps(toSend), client) #convert list into a tuple
+        if addr != client:
+            toSend = {"data": data, "addr": list(addr)}
+            sock.sendto(json.dumps(toSend), client) #convert list into a tuple
 
 def Login(addr,sock):
     clients.append(addr)
-    strToSend = json.dumps(clients)
-    sock.sendto(strToSend,addr)
 
 
 def Logout(addr):

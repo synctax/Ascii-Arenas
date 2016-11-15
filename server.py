@@ -4,14 +4,17 @@
 
 import socket, time, json, os
 
-os.system("clear")
-#host = raw_input("Enter Your IP: ")
-host = "127.0.0.1"
-#port = input("Enter Port: ")
-port = 5000
-#worldName = raw_input("Enter Path to Worldfile: ")
-worldName = "./Worlds/spawnIsland"
+def getIP():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("gmail.com",80))
+    ip = (s.getsockname()[0])
+    s.close()
+    return ip
 
+os.system("clear")
+host = getIP()
+port = input("Enter Port: ")
+worldName = "./Worlds/spawnIsland"
 
 def fromFile(file):
     worldFile = open(file,'r')
@@ -42,6 +45,7 @@ s.setblocking(True)
 
 quitting = False
 print "Server Started."
+print("IP: "+host+"; ; Port: "+ str(port) )
 while not quitting:
     try:
         data, addr = s.recvfrom(1024)

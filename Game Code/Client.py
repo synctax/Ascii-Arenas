@@ -55,6 +55,7 @@ class Client():
 	def Logout(self):
 		self.Send("Quit")
 		self.shutdown = True
+		self.players = {}
 
 	def receving(self, name, sock):
 		while True:

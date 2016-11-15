@@ -22,8 +22,8 @@ class Player:
 		self.serverList = {
 		"Generic Server":('127.0.0.1',5000),
 		"Super PvP Arena":('127.0.0.1',1337),
-		"<HYPE 420>":('127.0.0.1',420),
-		"harambe":('127.0.0.1',90001)
+		"<HYPE 420>":('127.0.0.1',4200),
+		"harambe":('127.0.0.1',9001)
 		}
 		self.world.addPlayer(self)
 
@@ -48,9 +48,6 @@ class Player:
 	def movePos(self, xDiff, yDiff):
 		newX = self.x + xDiff
 		newY = self.y + yDiff
-		if not self.client.shutdown:
-			self.client.Send(str(self.x) + " " +str(self.y))
-
 		if self.world.getTile(newX,newY).isCollidable:
 			return False
 		self.x += xDiff
@@ -58,6 +55,8 @@ class Player:
 		if self.mode == 1:
 			self.cursorx = self.x
 			self.cursory = self.y
+		if not self.client.shutdown:
+			self.client.Send(str(self.x) + " " +str(self.y))
 
 	def getChar(self):
 		return self.char

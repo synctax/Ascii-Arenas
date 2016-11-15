@@ -115,6 +115,7 @@ def keyloop(scr,scr2):
 					pc.mainPlayer.Interact()
 					screen.draw()
 		scr.refresh()
+	client.Logout()
 	client.Close()
 
 

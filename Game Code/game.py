@@ -1,13 +1,10 @@
  #!/usr/bin/env python3
 
-import curses, string, traceback, time
+import curses, string, traceback, time, Client, threading, tiles
 import GameWorld as gw
-import tiles
 import Player_Class as pc
 from Screen import Screen
 from MenuHandler import MenuHandler
-import Client
-import threading
 
 gw.spawnIsland.tiles,gw.mainShop.tiles = tiles.allTiles, tiles.allTiles
 gw.spawnIsland.doors,gw.mainShop.doors = tiles.spawnIslandDoors, tiles.mainShopDoors
@@ -19,10 +16,11 @@ def keyloop(scr,scr2):
 	menu = MenuHandler(scr2,pc.mainPlayer)
 	curses.start_color()
 	serverAddr = ("127.0.0.1",5000)
-	client = Client.Client("127.0.0.1",1234,pc.mainPlayer,screen,menu)
+	client = Client.Client(pc.mainPlayer,screen,menu)
 	scr.nodelay(True)
 	screen.draw()
 	client.login(serverAddr)
+	client.startListening()
 
 	while 1:
 		menu.Update()
@@ -104,7 +102,7 @@ def keyloop(scr,scr2):
 			elif c == "p":
 				pc.mainPlayer.world.saveArray(screen.world.name)
 		scr.refresh()
-	c.close()
+	client.Close()
 
 
 

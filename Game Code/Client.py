@@ -10,11 +10,10 @@ import json
 #data format: {"function" : <index of function>, "args": (args tuple)}
 
 class Client():
-	def __init__(self,ip,port,player,screen,menu):
+	def __init__(self,player,screen,menu):
 		self.shutdown = True
-		#self.ip = self.getIP()
-		self.ip = ip
-		self.port = port
+		self.ip = self.getIP()
+		self.port = 0
 		self.player = player
 		self.screen = screen
 		self.world = None
@@ -22,7 +21,7 @@ class Client():
 		self.server = None
 		self.mainSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 		self.mainSocket.bind((self.ip, self.port))
-		#self.mainSocket.setblocking(0)
+		self.mainSocket.setblocking(True)
 		self.players = {}
 		self.functions = [Player.setChar,Player.setPos,Player.movePos,Player.setTile,Player.Interact]
 
@@ -34,16 +33,17 @@ class Client():
 		return ip
 
 	def addPlayer(self,player):
-		self.players[str(player)] = Player.Player(0,0,["@"],self.world)
+		self.players[str(player)] = Player(0,0,["@"],self.world)
 
 	def login(self,server):
 		self.server = server
 		self.Send("Hello!")
-		'''clients, serverA = self.mainSocket.recvfrom(1024)
-		clients = json.dumps(clients)
-		for client in clients:
-			self.addPlayer(client)
-		self.world = gw.spawnIsland'''
+		self.shutdown = False
+		clients, serverA = self.mainSocket.recvfrom(1024)
+		#clients = json.dumps(clients)
+		#for client in clients:
+			#self.addPlayer(client)
+		self.world = gw.spawnIsland
 
 	def Logout(self):
 		self.Send("Quit")
@@ -52,25 +52,28 @@ class Client():
 	def receving(self, name, sock):
 		while True:
 			while not self.shutdown:
-				try:
-					while True:
-						data, addr = sock.recvfrom(1024).decode()
-						print(data)
-						message = json.loads(data)
-						self.handleInput(massage["data"],message["addr"])
-				except:
-					pass
-			pass
+				#try:
+				data = sock.recv(1024)
+				print(data)
+				self.handleInput(data)
+				#except:
+					#pass
 
-	def handleInput(self,data,addr):
-		if data == "Hello!":
-			self.addPlayer(addr)
-		funcData = json.loads(data)
-		self.functions[funcData["functions"]](self.clients[addr],*funcData["args"])
-		self.screen.draw()
+	def handleInput(self,data):
+		try:
+			decodedData = json.loads(data)
+			data = decodedData["data"]
+			addr = tuple(decodedData["addr"]) #decode list into a tuple
+			if data == "Hello!":
+				self.addPlayer(addr)
+			self.screen.draw()
+			print(data)
+		except:
+			raise
+			#print(data)
 
 	def Send(self,message):
-		self.mainSocket.sendto(message.encode(), self.server)
+		self.mainSocket.sendto(message, self.server)
 
 	def startListening(self):
 		self.rT = threading.Thread(target=self.receving, args=("RecvThread",self.mainSocket))

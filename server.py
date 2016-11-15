@@ -5,9 +5,12 @@
 import socket, time, json, os
 
 os.system("clear")
-host = raw_input("Enter Your IP: ")
-port = input("Enter Port: ")
-worldName = raw_input("Enter Path to Worldfile: ")
+#host = raw_input("Enter Your IP: ")
+host = "127.0.0.1"
+#port = input("Enter Port: ")
+port = 5000
+#worldName = raw_input("Enter Path to Worldfile: ")
+worldName = "./Worlds/spawnIsland"
 
 
 def fromFile(file):
@@ -18,12 +21,14 @@ def fromFile(file):
 
 def sendToAll(addr, data, sock):
     for client in clients:
-        if addr != client:
-            sock.sendto(data, client)
+        #if addr != client:
+        toSend = {"data": data, "addr": list(addr)}
+        sock.sendto(json.dumps(toSend), client) #convert list into a tuple
 
 def Login(addr,sock):
     clients.append(addr)
-    sock.sendto(addr, json.dumps(clients))
+    strToSend = json.dumps(clients)
+    sock.sendto(strToSend,addr)
 
 
 def Logout(addr):

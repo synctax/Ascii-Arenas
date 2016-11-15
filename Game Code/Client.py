@@ -68,6 +68,7 @@ class Client():
 		if self.players.has_key(str(addr)):
 			self.movePlayer(addr,data)
 		else:
+			self.Send(str(self.player.x)+" "+str(self.player.y))
 			self.addPlayer(addr)
 		self.UPDATE_FLAG = True
 

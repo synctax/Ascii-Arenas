@@ -33,7 +33,11 @@ class Client():
 		return ip
 
 	def addPlayer(self,player):
-		self.players[str(player)] = Player(0,0,["@"],self.world)
+		self.players[str(player)] = Player(50,20,["@"],self.world)
+
+	def movePlayer(self,player,data):
+		data = data.split(" ")
+		self.players[str(player)].movePos(int(data[0]),int(data[1]))
 
 	def login(self,server):
 		self.server = server
@@ -52,25 +56,17 @@ class Client():
 	def receving(self, name, sock):
 		while True:
 			while not self.shutdown:
-				#try:
 				data = sock.recv(1024)
-				print(data)
 				self.handleInput(data)
-				#except:
-					#pass
 
 	def handleInput(self,data):
-		try:
-			decodedData = json.loads(data)
-			data = decodedData["data"]
-			addr = tuple(decodedData["addr"]) #decode list into a tuple
-			if data == "Hello!":
-				self.addPlayer(addr)
-			self.screen.draw()
-			print(data)
-		except:
-			raise
-			#print(data)
+		decodedData = json.loads(data)
+		data = decodedData["data"]
+		addr = tuple(decodedData["addr"]) #decode list into a tuple
+		if self.players.has_key(str(addr)):
+			self.movePlayer(addr,data)
+		else:
+			self.addPlayer(addr)
 
 	def Send(self,message):
 		self.mainSocket.sendto(message, self.server)
@@ -83,49 +79,3 @@ class Client():
 	def Close(self):
 		self.shudown = True
 		self.mainSocket.close()
-
-'''import socket
-import threading
-import time
-
-tLock = threading.Lock()
-shutdown = False
-
-def receving(name, sock):
-    while not shutdown:
-        try:
-            tLock.acquire()
-            while True:
-                data, addr = sock.recvfrom(1024)
-                print str(data)
-        except:
-            pass
-        finally:
-            tLock.release()
-
-host = '127.0.0.1'
-port = 0
-
-server = ('127.0.0.1',5000)
-
-s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.bind((host, port))
-s.setblocking(0)
-
-rT = threading.Thread(target=receving, args=("RecvThread",s))
-rT.start()
-
-alias = raw_input("Name: ")
-message = raw_input(alias + "-> ")
-while message != 'q':
-    if message != '':
-        s.sendto(alias + ": " + message, server)
-    tLock.acquire()
-    message = raw_input(alias + "-> ")
-    tLock.release()
-    time.sleep(0.2)
-
-shudown = True
-rT.join()
-s.close()
-'''

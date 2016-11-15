@@ -1,6 +1,6 @@
  #!/usr/bin/env python3
 
-import curses, string, traceback, time, Client, threading, tiles
+import curses, string, traceback, time, Client, threading, tiles, json
 import GameWorld as gw
 import Player_Class as pc
 from Screen import Screen
@@ -24,6 +24,7 @@ def keyloop(scr,scr2):
 
 	while 1:
 		menu.Update()
+		screen.draw()
 		try:
 			c = chr(scr.getch())
 		except:
@@ -32,16 +33,19 @@ def keyloop(scr,scr2):
 			if c == 'w':
 				pc.mainPlayer.movePos(0,-1)
 				screen.draw()
-				client.Send("I pressed 'W'")
+				client.Send("0 -1")
 			elif c == 'a':
 				pc.mainPlayer.movePos(-1,0)
 				screen.draw()
+				client.Send("-1 0")
 			elif c == 's':
 				pc.mainPlayer.movePos(0,1)
 				screen.draw()
+				client.Send("0 1")
 			elif c == 'd':
 				pc.mainPlayer.movePos(1,0)
 				screen.draw()
+				client.Send("1 0")
 			elif c == "q":
 				client.Send("Quit")
 				break

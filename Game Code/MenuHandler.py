@@ -23,6 +23,7 @@ class MenuHandler():
 			self.scr.addstr(5,1,"Move - W,A,S,D")
 			self.scr.addstr(6,1,"Interact - E")
 			self.scr.addstr(7,1,"Build - M")
+			self.scr.addstr(8,1,"Join Game - C")
 		elif self.player.mode == 2:
 			self.scr.addstr(5,1,"Move Cursor-W,A,S,D")
 			self.scr.addstr(6,1,"Build - SPACE")
@@ -38,6 +39,12 @@ class MenuHandler():
 				self.scr.addstr(14+lastI+j,1,["F","G","H","J","K","L"][j] + " - " +k.getName())
 				lastJ = j
 			self.scr.addstr(15+lastI+lastJ,0,"-------------------")
+		elif self.player.mode == 3:
+			self.scr.addstr(1,0,"-------Servers-------")
+			for i,v in enumerate(self.player.serverList.keys()):
+				self.scr.addstr(2+i,0,str(i) + " - " +str(self.player.serverList[v]))
+				lastI = i
+			self.scr.addstr(4+lastI,0,"-------------------")
 		self.scr.addstr(44,1,"      Q - Quit")
 		self.scr.attroff(curses.A_BOLD)
 		self.scr.attroff(curses.color_pair(1))

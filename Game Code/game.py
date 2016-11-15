@@ -13,14 +13,12 @@ def keyloop(scr,scr2):
 	#INTERACT, MOVE, INVENTORY, DRAW = 0,1,2,3
 	initWorld = gw.spawnIsland
 	screen = Screen(scr,pc.mainPlayer, initWorld)
+	client = Client.Client(screen,pc.mainPlayer)
+	pc.mainPlayer.client = client
 	menu = MenuHandler(scr2,pc.mainPlayer)
 	curses.start_color()
-	serverAddr = ("127.0.0.1",5000)
-	client = Client.Client(pc.mainPlayer,screen,menu)
 	scr.nodelay(True)
 	screen.draw()
-	client.login(serverAddr)
-	client.startListening()
 
 	while 1:
 		menu.Update()
@@ -39,15 +37,12 @@ def keyloop(scr,scr2):
 				elif c == 'a':
 					pc.mainPlayer.movePos(-1,0)
 					screen.draw()
-					client.Send("-1 0")
 				elif c == 's':
 					pc.mainPlayer.movePos(0,1)
 					screen.draw()
-					client.Send("0 1")
 				elif c == 'd':
 					pc.mainPlayer.movePos(1,0)
 					screen.draw()
-					client.Send("1 0")
 				elif c == "q":
 					client.Send("Quit")
 					client.Close()
@@ -60,7 +55,8 @@ def keyloop(scr,scr2):
 				elif c == "m":
 					pc.mainPlayer.cursorShowing = True
 					pc.mainPlayer.mode = 2
-				client.Send(str(pc.mainPlayer.x) + " " +str(pc.mainPlayer.y))
+				elif c == "c":
+					pc.mainPlayer.mode = 3
 			elif pc.mainPlayer.mode == 0:
 				if c == 'w':
 					pc.mainPlayer.moveCursor(0,-1,True)
@@ -109,6 +105,15 @@ def keyloop(scr,scr2):
 					screen.draw()
 				elif c == "p":
 					pc.mainPlayer.world.saveArray(screen.world.name)
+			elif pc.mainPlayer.mode == 3:
+				if c in "1234567890":
+					pc.mainPlayer.connectToServer(int(c))
+				elif c == "q":
+					break
+				elif c == "c":
+					pc.mainPlayer.cursorShowing = False
+					pc.mainPlayer.Interact()
+					screen.draw()
 		scr.refresh()
 	client.Close()
 

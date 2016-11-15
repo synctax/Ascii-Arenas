@@ -5,6 +5,7 @@ import AI
 #CHARACTER CLASS
 class Player:
 	def __init__(self, initx, inity, initchars,world):
+		self.client = None
 		self.x = initx
 		self.y = inity
 		self.chars = initchars
@@ -17,8 +18,19 @@ class Player:
 		self.cursorShowing = False
 		self.mode = 1
 		self.selectedTile = 0
-		self.modeNames = ['INTERACT','PLAY','BUILD']
+		self.modeNames = ['INTERACT','PLAY','BUILD','JOIN']
+		self.serverList = {
+		"Generic Server":('127.0.0.1',5000),
+		"Super PvP Arena":('127.0.0.1',1337),
+		"<HYPE 420>":('127.0.0.1',420),
+		"harambe":('127.0.0.1',90001)
+		}
 		self.world.addPlayer(self)
+
+	def connectToServer(self,selectNum):
+		if not self.client.shutdown:
+			self.client.Logout()
+		self.client.login(self.serverList[self.serverList.keys()[selectNum]])
 
 	def setChar(self, charindex):
 		self.charnum = charindex
@@ -36,6 +48,8 @@ class Player:
 	def movePos(self, xDiff, yDiff):
 		newX = self.x + xDiff
 		newY = self.y + yDiff
+		if not self.client.shutdown:
+			self.client.Send(str(self.x) + " " +str(self.y))
 
 		if self.world.getTile(newX,newY).isCollidable:
 			return False
@@ -103,4 +117,3 @@ spawnCrabs = []
 #make spawn crabs
 '''for i in range(0,random.randint(3,10)):
 	spawnCrabs.append(Mob(random.randint(25,129),random.randint(9,43),crabChars,160,gw.spawnIsland,AI.mobAi))'''
-

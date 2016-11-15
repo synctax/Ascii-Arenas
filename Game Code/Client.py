@@ -11,21 +11,20 @@ import json
 
 
 class Client():
-	def __init__(self,player,screen,menu):
+	def __init__(self,screen,player):
 		self.shutdown = True
 		self.UPDATE_FLAG = False
 		self.ip = self.getIP()
 		self.port = 0
-		self.player = player
 		self.screen = screen
-		self.world = None
-		self.menu = menu
+		self.world = gw.spawnIsland
 		self.server = None
 		self.mainSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 		self.mainSocket.bind((self.ip, self.port))
 		self.mainSocket.setblocking(True)
 		self.players = {}
 		self.functions = [Player.setChar,Player.setPos,Player.movePos,Player.setTile,Player.Interact]
+		self.player = player
 
 	def getIP(self):
 		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -49,10 +48,7 @@ class Client():
 		self.server = server
 		self.Send("Hello!")
 		self.shutdown = False
-		#clients, serverA = self.mainSocket.recv(1024)
-		#clients = json.loads(clients)
-		#for client in clients:
-			#self.addPlayer(client)
+		self.startListening()
 		self.world = gw.spawnIsland
 
 	def Logout(self):

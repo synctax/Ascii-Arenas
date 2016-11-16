@@ -20,10 +20,10 @@ class Player:
 		self.selectedTile = 0
 		self.modeNames = ['INTERACT','PLAY','BUILD','JOIN']
 		self.serverList = {
-		"Generic Server":('127.0.0.1',5000),
+		"Generic Server":('10.7.38.170',5000),
 		"Super PvP Arena":('127.0.0.1',1337),
 		"<HYPE 420>":('127.0.0.1',4200),
-		"harambe":('127.0.0.1',9001)
+		"harambe":('10.7.38.170',9001)
 		}
 		self.world.addPlayer(self)
 		self.cmds = {"m":self.setPos,"r":self.changeWorld,"p":self.setTile}
@@ -46,8 +46,10 @@ class Player:
 
 	def changeWorld(self,world):
 		self.world.removePlayer(self)
-		world.addPlayer(self)
-		self.world = world
+		gw.allWorlds[world].addPlayer(self)
+		self.world = gw.allWorlds[world]
+		if self.client:
+			if not self.client.shutdown: self.client.Send("r "+self.world.name)
 
 	def movePos(self, xDiff, yDiff):
 		newX = self.x + xDiff
@@ -68,21 +70,21 @@ class Player:
 	def setSelectedTile(self,tile):
 		self.selectedTile = tile
 
-	def setTile(self,x=False,y=False,tile=False):
+	def setTile(self,x=False,y=False,tile=False,world=False):
 		if not x:
-			x, y, tile = self.cursorx,self.cursory,self.selectedTile
+			x, y, tile, world = self.cursorx,self.cursory,self.selectedTile, self.world.name
 			if not self.client.shutdown:
 				if type(tile) == int:
 					tileStr = str(tile)
 				else:
 					tileStr = "'"+tile+"'"
-				self.client.Send("p "+str(x)+" "+str(y)+" "+tileStr)
+				self.client.Send("p "+str(x)+" "+str(y)+" "+tileStr+" "+world)
 		else:
 			if tile[0] != "'":
 				tile = int(tile)
 			else:
 				tile = tile[1:-1]
-		self.world.setTile(tile,int(x),int(y))
+		gw.allWorlds[world].setTile(tile,int(x),int(y))
 
 	def Interact(self):
 		x = self.cursorx

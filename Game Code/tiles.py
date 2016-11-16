@@ -30,11 +30,11 @@ class doorTile():
 	def onInteract(self,room,player,dist):
 		if dist <= self.range:
 			if room == self.room1:
-				player.changeWorld(self.room2)
+				player.changeWorld(self.room2.name)
 				player.x = self.x2
 				player.y = self.y2
 			elif room == self.room2:
-				player.changeWorld(self.room1)
+				player.changeWorld(self.room1.name)
 				player.x = self.x1
 				player.y = self.y1
 		return 1

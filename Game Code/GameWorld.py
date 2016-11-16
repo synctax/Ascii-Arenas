@@ -7,7 +7,7 @@ class Room:
 	def __init__(self,name):
 		self.doors = []
 		self.name = name
-		self.fromFile(name)
+		self.fromFile("../Worlds/"+name)
 		self.tiles = None
 		self.mobs = []
 		self.players = []
@@ -69,11 +69,6 @@ class Room:
 		self.array[y][x] = tile
 
 
-spawnIsland = Room('../Worlds/spawnIsland')
-mainShop = Room('../Worlds/mainShop')
-
-
-
-
-
-
+spawnIsland = Room('spawnIsland')
+mainShop = Room('mainShop')
+allWorlds = {"spawnIsland": spawnIsland,"mainShop": mainShop}

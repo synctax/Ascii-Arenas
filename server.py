@@ -12,8 +12,8 @@ def getIP():
     return ip
 
 os.system("clear")
-#host = getIP()
-host = "127.0.0.1"
+host = getIP()
+#host = "127.0.0.1"
 port = input("Enter Port: ")
 worldName = "./Worlds/spawnIsland"
 

@@ -6,8 +6,19 @@ from MenuHandler import MenuHandler
 import socket
 import threading
 import json
-#server = ('127.0.0.1',5000)
-#data format: {"function" : <index of function>, "args": (args tuple)}
+
+''' Language:
+<code> <param1> <param2> <param3>
+m <x pos> <ypos>						# move to location
+p <xpos> <ypos> <block#>				# place block at location
+j <xpos> <ypos> <char>					# join game or introduce self to newb
+q										# quit game
+r <room#>								# change room
+s <message>	<to> <from>				    # send message to target
+t <item#>								# pick up item
+d <xpos> <ypos>	<item#>				    # drop item
+u <item#> <target>						# use item
+'''
 
 
 class Client():
@@ -25,7 +36,7 @@ class Client():
 		self.players = {}
 		self.functions = [Player.setChar,Player.setPos,Player.movePos,Player.setTile,Player.Interact]
 		self.player = player
-		self.playerChars = ["#","$","%"]
+		self.playerChars = ["#","$","%","&","H","P"]
 
 	def getIP(self):
 		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -53,7 +64,7 @@ class Client():
 		self.world = gw.spawnIsland
 
 	def Logout(self):
-		self.Send("Quit")
+		self.Send("q")
 		self.shutdown = True
 		self.players = {}
 
@@ -65,14 +76,17 @@ class Client():
 
 	def handleInput(self,data):
 		decodedData = json.loads(data)
-		data = decodedData["data"]
+		data = decodedData["data"].split(" ")
+		command = data[0]
 		addr = tuple(decodedData["addr"]) #decode list into a tuple
-		if self.players.has_key(str(addr)):
-			if data == "Quit":
+		playerKnown = self.players.has_key(str(addr))
+		if playerKnown:
+			if command == "q":
 				self.removePlayer(addr)
 				self.UPDATE_FLAG = True
 				return True
-			self.movePlayer(addr,data)
+			if command in "mrp":
+				self.players[str(addr)].cmds[command](*tuple(data[1:]))
 		else:
 			self.Send(str(self.player.x)+" "+str(self.player.y))
 			self.addPlayer(addr)

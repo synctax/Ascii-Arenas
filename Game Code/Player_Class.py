@@ -1,6 +1,6 @@
 import GameWorld as gw
 import random
-import AI
+import AI, json
 
 #CHARACTER CLASS
 class Player:
@@ -26,6 +26,10 @@ class Player:
 		"harambe":('127.0.0.1',9001)
 		}
 		self.world.addPlayer(self)
+		self.cmds = {"m":self.setPos,"r":self.changeWorld,"p":self.setTile}
+
+	def getLoc(self):
+		return str(self.x)+" "+str(self.y)
 
 	def connectToServer(self,selectNum):
 		if not self.client.shutdown:
@@ -37,8 +41,8 @@ class Player:
 		self.char = self.initchars[self.charnum]
 
 	def setPos(self, x,y):
-		self.x = x
-		self.y = y
+		self.x = int(x)
+		self.y = int(y)
 
 	def changeWorld(self,world):
 		self.world.removePlayer(self)
@@ -56,7 +60,7 @@ class Player:
 			self.cursorx = self.x
 			self.cursory = self.y
 		if not self.client.shutdown:
-			self.client.Send(str(self.x) + " " +str(self.y))
+			self.client.Send("m "+str(self.x) + " " +str(self.y))
 
 	def getChar(self):
 		return self.char
@@ -64,8 +68,21 @@ class Player:
 	def setSelectedTile(self,tile):
 		self.selectedTile = tile
 
-	def setTile(self):
-		self.world.setTile(self.selectedTile, self.cursorx, self.cursory)
+	def setTile(self,x=False,y=False,tile=False):
+		if not x:
+			x, y, tile = self.cursorx,self.cursory,self.selectedTile
+			if not self.client.shutdown:
+				if type(tile) == int:
+					tileStr = str(tile)
+				else:
+					tileStr = "'"+tile+"'"
+				self.client.Send("p "+str(x)+" "+str(y)+" "+tileStr)
+		else:
+			if tile[0] != "'":
+				tile = int(tile)
+			else:
+				tile = tile[1:-1]
+		self.world.setTile(tile,int(x),int(y))
 
 	def Interact(self):
 		x = self.cursorx
@@ -112,7 +129,3 @@ class Mob(Player):
 playerChars = ["@"]
 crabChars = ['#','*']
 mainPlayer = Player(int(80),int(25),playerChars,gw.spawnIsland)
-spawnCrabs = []
-#make spawn crabs
-'''for i in range(0,random.randint(3,10)):
-	spawnCrabs.append(Mob(random.randint(25,129),random.randint(9,43),crabChars,160,gw.spawnIsland,AI.mobAi))'''

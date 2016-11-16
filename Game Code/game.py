@@ -44,7 +44,7 @@ def keyloop(scr,scr2):
 					pc.mainPlayer.movePos(1,0)
 					screen.draw()
 				elif c == "q":
-					client.Send("Quit")
+					client.Send("q")
 					client.Close()
 					break
 				elif c == "e":
@@ -115,7 +115,10 @@ def keyloop(scr,scr2):
 					pc.mainPlayer.Interact()
 					screen.draw()
 		scr.refresh()
-	client.Logout()
+	try:
+		client.Logout()
+	except:
+		pass
 	client.Close()
 
 
